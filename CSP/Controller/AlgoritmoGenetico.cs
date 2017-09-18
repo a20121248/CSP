@@ -16,18 +16,18 @@ namespace CSP.Controller
         public Graphics panel_sheet_process_window;
 
         public List<Rectangulo> listaPiezas;
+        public List<Stock> listaStocks;
         public List<String> chromosome;
 
         // Dimensiones del material en stock, considerado
         // como la suma de todo el stock disponible
-        public float current_sheet_width;
-        public float current_sheet_height;
-        public int longitud_cromosoma;
+        public int tamCromosoma;
+        public Poblacion miPoblacion;
+
 
         public Stack<Nodo> nodoPila;
 
         public String numero_generacion;
-        public String text_fitness_of_best;
         public String text_time;
 
         public double campo_min_rect_factor;
@@ -35,138 +35,61 @@ namespace CSP.Controller
         public double probMutacion;
         public int tamPoblacion;
 
-        public Poblacion miPoblacion;
-
-        double time_elapsed;
+        
 
         public AlgoritmoGenetico(FormGenetico formGenetico)
         {
-            time_elapsed = 0;
-
-            /* Iniciar parámetros del algoritmo */
+            // Iniciar parámetros del algoritmo
             listaPiezas = formGenetico.listaPiezas;
+            listaStocks = formGenetico.listaStocks;
             probMutacion = formGenetico.probabilidadMutacion;
             tamPoblacion = formGenetico.tamanhoPoblacion;
             campo_min_rect_factor = formGenetico.pesoMinimizarRectangulo;
             campo_cuadratura_factor = formGenetico.pesoFactorCuadratura;
-            longitud_cromosoma = listaPiezas.Count * 2 - 1;            
-            current_sheet_width = 10000;
-            current_sheet_height = 10000;
 
-            /* Crear la poblacion inicial */
+            // Crear la poblacion inicial
+            tamCromosoma = listaPiezas.Count * 2 - 1;            
             CalcularPoblacionInicial();
 
             // Calular 1 generacion
-            //CalculateNextGeneration();
+            CalcularSiguienteGeneracion();
 
             // Calular 1000 generaciones
-            CalculateNext1000Generation();
+            CalcularSiguientesNGeneraciones(1000);
 
             // Guardar el mejor cromosoma:
             mejorCromosoma = miPoblacion.Individuos[0];
 
-            //Chromosome best = my_population.population_list[0];
-            //mejorCromosoma = best;
-
             //Debug_prueba();
-
         }
 
         public void Debug_prueba()
         {
             Cromosoma test = new Cromosoma(new List<string>() { "3", "4", "H", "1", "2", "V", "H"});
 
-            CalculateAndSetChromosomePhenotype(test);
+            CalcularCromosoma(test);
             
             mejorCromosoma = test;
         }
 
-
         public void CalcularPoblacionInicial()
         {
-            miPoblacion = new Poblacion(probMutacion, tamPoblacion, longitud_cromosoma);
-            miPoblacion.Generacion = 0;
-
-            foreach (Cromosoma chrom in miPoblacion.Individuos)
+            // Creo una lista de "tamPoblacion" cromosomas aleatorios
+            miPoblacion = new Poblacion(tamPoblacion, probMutacion, tamCromosoma);
+            // Completo la información de cada cromosoma (posición, fitness)
+            foreach (Cromosoma cromosoma in miPoblacion.Individuos)
             {
-                CalculateAndSetChromosomePhenotype(chrom);
+                CalcularCromosoma(cromosoma);
             }
-
             miPoblacion.OrdenarPoblacionPorFitness();
-
-            text_fitness_of_best = "Fitness: " + miPoblacion.Individuos[0].Fitness.ToString();
-
-            // Tomar el mejor individuo
-            Cromosoma best = miPoblacion.Individuos[0];
         }
 
-        public void CalculateNextGeneration()
+        public void CalcularCromosoma(Cromosoma cromosoma)
         {
-            miPoblacion.CalcularUnaGeneracion();
-            numero_generacion = "Generation " + miPoblacion.Generacion;
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            // the code that you want to measure comes here
-
-            foreach (Cromosoma chrom in miPoblacion.Individuos)
-            {
-                CalculateAndSetChromosomePhenotype(chrom);
-            }
-
-            miPoblacion.OrdenarPoblacionPorFitness();
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-
-            text_fitness_of_best = "Fitness: " + miPoblacion.Individuos[0].Fitness.ToString();
-
-            // Take out the best and draw it:
-            Cromosoma best = miPoblacion.Individuos[0];
-
-            // stack initialization 
-            nodoPila = new Stack<Nodo>();
-            // we build the stack depending on how the chromosome specifies it
-            ConstruirArbolDeUnCromosomas(best.ListaGenes);
-            // pop the tree once it is built
-            Nodo tree_best = nodoPila.Pop();
-            // once the tree is built, now we can set the positions of the pieces depending of their relationship with other pieces (H or V)
-            CalcularPosiciones(tree_best);
-            CalcularYGuardarFitness(best, tree_best, listaPiezas);
-        }
-
-        public void CalculateNext1000Generation()
-        {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            // el código que se desse medir va aquí
-
-            for (int i = 0; i < 1000; ++i)
-            {
-                miPoblacion.CalcularUnaGeneracion();
-                numero_generacion = "Generation " + miPoblacion.Generacion;
-
-                foreach (Cromosoma chrom in miPoblacion.Individuos)
-                {
-                    CalculateAndSetChromosomePhenotype(chrom);
-                }
-            }
-
-            miPoblacion.OrdenarPoblacionPorFitness();
-
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-
-            text_time = "Time: " + elapsedMs + " ms.";
-
-            text_fitness_of_best = "Fitness: " + miPoblacion.Individuos[0].Fitness.ToString();
-        }
-
-        public void CalculateAndSetChromosomePhenotype(Cromosoma crom)
-        {
-            // Inicialización de la pila
             nodoPila = new Stack<Nodo>();
 
             // Construimos una pila dependiendo de cómo está especificado el cromosoma
-            ConstruirArbolDeUnCromosomas(crom.ListaGenes);
+            ConstruirArbolDeUnCromosomas(cromosoma.ListaGenes);
 
             // Desapilamos una vez que el árbol este construido
             Nodo tree = nodoPila.Pop();
@@ -174,25 +97,25 @@ namespace CSP.Controller
             // Una vez construido el árbol, arbol podemos calcular las posiciones de las piezas
             // dependiendo de su relación con otras piezas (operadores H y V)
             CalcularPosiciones(tree);
-            crom.Tree = tree;
-            CalcularYGuardarFitness(crom, tree, listaPiezas);
+            cromosoma.Tree = tree;
+            CalcularYGuardarFitness(cromosoma, tree, listaPiezas);
         }
 
-        public void ConstruirArbolDeUnCromosomas(List<String> chromosome)
+        public void ConstruirArbolDeUnCromosomas(List<String> cromosoma)
         {
-            for (int i = 0; i < chromosome.Count; ++i)
+            for (int i = 0; i < cromosoma.Count; ++i)
             {
                 int n = -1;
                 // Si el gen del cromosoma es una pieza, entonces necesitamos obtener esa pieza
-                if (Utilities.EsNumero(chromosome[i], out n))
+                if (Utilities.EsNumero(cromosoma[i], out n))
                 {
                     // Recuerda: El segundo parámetro de la pila es el id, empezando de 0 (es por ello que restamos 1)
                     // Por ejemplo, si el cromosoma es 3, entonces queremos apilar la pieza numero 2
-                    ApilaPieza(listaPiezas, n - 1);
+                    ApilarPieza(listaPiezas, n - 1);
                 }
                 else // not a number -> V or H
                 {
-                    DesapilaOperadorYApilaBloque(chromosome[i]);
+                    DesapilaOperadorYApilaBloque(cromosoma[i]);
                 }
             }
         }
@@ -202,7 +125,7 @@ namespace CSP.Controller
 
         // No calcula las posiciones, pues están se calcularán cuando el árbol esté completamente construido
         // El "id" se refiere a la posición de la pieza en a lista, contando a partir de 0.
-        public void ApilaPieza(List<Rectangulo> miListaPiezas, int id)
+        public void ApilarPieza(List<Rectangulo> miListaPiezas, int id)
         {
             // Obten las dimensiones de la pieza
             float rect_ancho = miListaPiezas[id].W;
@@ -259,6 +182,72 @@ namespace CSP.Controller
 
             nodoPila.Push(integrated_rectangle_node);
         }
+
+        public void CalcularSiguienteGeneracion()
+        {
+            miPoblacion.CalcularUnaGeneracion();
+            numero_generacion = "Generation " + miPoblacion.Generacion;
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            // the code that you want to measure comes here
+
+            foreach (Cromosoma chrom in miPoblacion.Individuos)
+            {
+                CalcularCromosoma(chrom);
+            }
+
+            miPoblacion.OrdenarPoblacionPorFitness();
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+
+            //text_fitness_of_best = "Fitness: " + miPoblacion.Individuos[0].Fitness.ToString();
+
+            // Take out the best and draw it:
+            Cromosoma best = miPoblacion.Individuos[0];
+
+            // stack initialization 
+            nodoPila = new Stack<Nodo>();
+            // we build the stack depending on how the chromosome specifies it
+            ConstruirArbolDeUnCromosomas(best.ListaGenes);
+            // pop the tree once it is built
+            Nodo tree_best = nodoPila.Pop();
+            // once the tree is built, now we can set the positions of the pieces depending of their relationship with other pieces (H or V)
+            CalcularPosiciones(tree_best);
+            CalcularYGuardarFitness(best, tree_best, listaPiezas);
+        }
+
+        public void CalcularSiguientesNGeneraciones(int numMaxGeneraciones)
+        {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            // el código que se desse medir va aquí
+
+            for (int i = 0; i < numMaxGeneraciones; ++i)
+            {
+                miPoblacion.CalcularUnaGeneracion();
+                numero_generacion = "Generation " + miPoblacion.Generacion;
+
+                foreach (Cromosoma chrom in miPoblacion.Individuos)
+                {
+                    CalcularCromosoma(chrom);
+                }
+            }
+
+            miPoblacion.OrdenarPoblacionPorFitness();
+
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+
+            text_time = "Time: " + elapsedMs + " ms.";
+
+            //text_fitness_of_best = "Fitness: " + miPoblacion.Individuos[0].Fitness.ToString();
+        }
+
+
+
+
+
+
 
         // sets the positions of the pieces doing a inorder traversal to the tree (once built)
         public void CalcularPosiciones(Nodo root)

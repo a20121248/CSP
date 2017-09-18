@@ -9,19 +9,21 @@ namespace CSP.Model
 {
     public class Poblacion
     {
+        private int generacion;
         private int tamanhoPoblacion;
         private double probabilidadMutacion;
-        private int generacion;
-        private List<Cromosoma> individuos = new List<Cromosoma>();
+        private List<Cromosoma> individuos;
 
         // Crea una nueva población con individuos generados aleatoriamente
-        public Poblacion(double probMutacion, int tamPoblacion, int longitudCromosoma)
+        public Poblacion(int tamanhoPoblacion, double probabilidadMutacion, int longitudCromosoma)
         {
-            this.probabilidadMutacion = probMutacion;
-            this.tamanhoPoblacion = tamPoblacion;
-            for (int i = 0; i < tamPoblacion; ++i)
+            this.generacion = 0;
+            this.tamanhoPoblacion = tamanhoPoblacion;
+            this.probabilidadMutacion = probabilidadMutacion;
+            this.individuos = new List<Cromosoma>();
+            for (int i = 0; i < tamanhoPoblacion; ++i)
             {
-                individuos.Add(new Cromosoma(longitudCromosoma));
+                this.individuos.Add(new Cromosoma(longitudCromosoma));
             }
         }
 
