@@ -19,6 +19,7 @@ namespace CSP.View
         public double pesoMinimizarRectangulo;
         public double pesoFactorCuadratura;
         public List<Rectangulo> listaPiezas;
+        public List<Stock> listaStocks;
         public List<String> solucion;
         public double fitness;
         public Nodo arbol_solucion;
@@ -26,7 +27,8 @@ namespace CSP.View
         public FormGenetico(FormPedidos formPedidos)
         {            
             InitializeComponent();
-            listaPiezas = formPedidos.listaPiezas;            
+            listaPiezas = formPedidos.listaPiezas;
+            listaStocks = formPedidos.listaStocks;
         }
 
         private void btnIniciar_Click(object sender, EventArgs e)

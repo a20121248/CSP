@@ -37,7 +37,7 @@ namespace CSP.Model
         public int Generacion { get => generacion; set => generacion = value; }
         public List<Cromosoma> Individuos { get => individuos; set => individuos = value; }
 
-        private void SepararPiezasOperadores(Cromosoma progenitor, out List<String> listaPiezas, out List<String> listaOperadores)
+        private void SepararPiezasYOperadores(Cromosoma progenitor, out List<String> listaPiezas, out List<String> listaOperadores)
         {
             listaPiezas = new List<String>();
             listaOperadores = new List<String>();
@@ -132,10 +132,10 @@ namespace CSP.Model
 
             // Separar la parte de piezas de la parte de operadores para el progenitor1
             List<String> progenitor1_listaPiezas, progenitor1_listaOperadores;
-            SepararPiezasOperadores(progenitor1, out progenitor1_listaPiezas, out progenitor1_listaOperadores);
+            SepararPiezasYOperadores(progenitor1, out progenitor1_listaPiezas, out progenitor1_listaOperadores);
             // Separar la parte de piezas de la parte de operadores para el progenitor2
             List<String> progenitor2_listaPiezas, progenitor2_listaOperadores;
-            SepararPiezasOperadores(progenitor2, out progenitor2_listaPiezas, out progenitor2_listaOperadores);
+            SepararPiezasYOperadores(progenitor2, out progenitor2_listaPiezas, out progenitor2_listaOperadores);
 
             
             // Se crea un diccionario vacio cuyas claves son cadenas y los valores son listas de cadenas,

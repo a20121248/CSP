@@ -1,4 +1,10 @@
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csprojResolveAssemblyReference.cache
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csproj.ResolveComReference.cache
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.Properties.Resources.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormCuckooSearch.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormGenetico.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormPedidos.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormResultado.resources
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csproj.GenerateResource.Cache
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csproj.CoreCompileInputs.cache
 C:\Users\Javier\source\repos\CSP\CSP\bin\Debug\CSP.exe.config
@@ -6,9 +12,4 @@ C:\Users\Javier\source\repos\CSP\CSP\bin\Debug\CSP.exe
 C:\Users\Javier\source\repos\CSP\CSP\bin\Debug\CSP.pdb
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.exe
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.pdb
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csprojResolveAssemblyReference.cache
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormResultado.resources
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormPedidos.resources
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.csproj.ResolveComReference.cache
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormCuckooSearch.resources
-C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormGenetico.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormStocks.resources

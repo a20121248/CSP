@@ -22,6 +22,15 @@ namespace CSP.Model
             this.h = h;
         }
 
+        public Rectangulo(int id, float x, float y, float w, float h)
+        {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.w = w;
+            this.h = h;
+        }
+
         public int Id { get => id; set => id = value; }
         public float X { get => x; set => x = value; }
         public float Y { get => y; set => y = value; }
