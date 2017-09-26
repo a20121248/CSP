@@ -37,6 +37,24 @@ namespace CSP.Model
         public float W { get => w; set => w = value; }
         public float H { get => h; set => h = value; }
 
+        public float ObtenerW(String rotacion)
+        {
+            if (rotacion.Equals("R")) // sí está rotada
+            {
+                return h;
+            }
+            return w;
+        }
+
+        public float ObtenerH(String rotacion)
+        {
+            if (rotacion.Equals("R")) // sí está rotada
+            {
+                return w;
+            }
+            return h;
+        }
+
         public Boolean EstaCubierto(Rectangulo otro)
         {
             return otro.w >= this.w && otro.h >= this.h;

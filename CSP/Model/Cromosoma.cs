@@ -13,6 +13,8 @@ namespace CSP.Model
         private Nodo tree;
         private double fitness;
 
+        public String Cadena { get => Utilitarios.ImprimirLista(listaGenes);}
+
         // Constructores
 
         // Void constructor
@@ -21,86 +23,43 @@ namespace CSP.Model
 
         }
 
-        public Nodo Tree { get => tree; set => tree = value; }
-        public double Fitness { get => fitness; set => fitness = value; }
-        public List<string> ListaGenes { get => listaGenes; set => listaGenes = value; }
-
         // Defined constructor
         public Cromosoma(List<String> chromosome)
         {
             listaGenes = chromosome;
         }
 
-        // Introduce a un cromosoma, represetando por List<String>
-        // un gen tipo Pieza de una lista de piezas disponibles
-        public void IntroducirPiezaAleatoria(List<String> miCromosoma, List<String> miListaPiezasDisponibles, System.Random rnd_obj)
-        {
-            // Selecciona una pieza
-            int nroPieza = rnd_obj.Next(0, miListaPiezasDisponibles.Count);
-            String genPieza = miListaPiezasDisponibles[nroPieza];
-
-            // Agrega la pieza al cromosoma
-            miCromosoma.Add(genPieza);
-
-            // Remueve la pieza de la lista de piezas para que no sea anhadida en un futuro
-            miListaPiezasDisponibles.Remove(genPieza);
-        }
-
-        // Introduce al final del cromosoma un operadora genetico
-        public void IntroducirOperadorAleatorio(List<String> miCromosoma, System.Random objRandom)
-        {
-            // Seleccionar aleatoriamente un operador
-            int eleccionOperador = objRandom.Next(1, 3);
-            if (eleccionOperador == 1)
-            {
-                miCromosoma.Add("H");
-            }
-            if (eleccionOperador == 2)
-            {
-                miCromosoma.Add("V");
-            }
-        }
-
-        // Random constructor (toma la longitud como argumento)
         // Crear un cromosoma válido aleatorio
-        public Cromosoma(int longitudCromosoma)
+        public Cromosoma(int numGenes, System.Random rnd)
         {
-            List<String> cromosoma = new List<String>();
+            List<String> listaGenes = new List<String>();
 
-            // Dada una longitud (número de genes en el cromosoma genes),
-            // conocemos exactamente el número de piezas, pues [ Ng = Np + No = 2Np - 1 ] -> Np = (Ng + 1) / 2
-            int ng = longitudCromosoma; // Número de genes en el cromosoma
-            int np = (ng + 1) / 2;      // Número de piezas
-            int no = ng - np;           // Número de operadores
+            int numPiezas = (numGenes + 1) / 2;       // Número de piezas
+            int numOperadores = numGenes - numPiezas; // Número de operadores
 
-            // Generamos una lista que contendrá a las piezas
-            List<String> listaPiezas = new List<String>();
-
-            System.Random rnd = new System.Random();
-
-            // Llenamos las piezas con numeros de pieza
-            for (int i = 1; i <= np; ++i)
+            // Llenamos la lista de piezas con numeros de pieza
+            List<String> listaPiezasDisponibles = new List<String>();
+            for (int i = 1; i <= numPiezas; ++i)
             {
-                listaPiezas.Add(i.ToString());
+                listaPiezasDisponibles.Add(i.ToString());
             }
 
-            // Las primeras dos piezas siempre serán parte número
-            IntroducirPiezaAleatoria(cromosoma, listaPiezas, rnd);
-            IntroducirPiezaAleatoria(cromosoma, listaPiezas, rnd);
-            IntroducirOperadorAleatorio(cromosoma, rnd);
+            // Las primeras dos piezas siempre serán piezas, seguidos de un operador
+            IntroducirPiezaAleatoria(listaGenes, listaPiezasDisponibles, rnd);
+            IntroducirPiezaAleatoria(listaGenes, listaPiezasDisponibles, rnd);
+            IntroducirOperadorAleatorio(listaGenes, rnd);
 
-            // A partir de ahora, necesitamos completar el cromosoma pero satisfaciendo las restrcciones
-
-            // Para los siguientes genes del cromosoma
-            for (int i = cromosoma.Count; i < ng; ++i)
+            // A partir de ahora, necesitamos completar el cromosoma pero satisfaciendo restricciones.
+            // Entonces, para los siguientes genes del cromosoma
+            for (int i = listaGenes.Count; i < numGenes; ++i)
             {
                 // Revisar si el No >= Np+1 (solo en la izquierda)
                 int actual_np = 0;
                 int actual_no = 0;
                 int n;
-                for (int j = 0; j < cromosoma.Count; ++j)
+                for (int j = 0; j < listaGenes.Count; ++j)
                 {
-                    if (Utilities.EsNumero(cromosoma[j], out n)) {
+                    if (Utilitarios.EsPieza(listaGenes[j], out n)) {
                         ++actual_np;
                     }
                     else
@@ -109,87 +68,115 @@ namespace CSP.Model
                     }
                 }
 
-                // Una vez contados, decidimos:
-                if (no == np + 1)
-                {
-                    // Límite de la restricción, necesitamos poner una pieza
-                    IntroducirPiezaAleatoria(cromosoma, listaPiezas, rnd);
+                // Si estamos en el límite de la restricción, necesitamos poner una pieza
+                if (numOperadores == numPiezas + 1)
+                {                    
+                    IntroducirPiezaAleatoria(listaGenes, listaPiezasDisponibles, rnd);
                 }
-                // Si la restricción no está en el límite, entonces tenemos con un 50% de probabilidad una pieza o un operadora, si aun hay piezas
+                // Si la restricción no está en el límite, se puede introducir una pieza u operador
                 else
                 {
-                    // Si no hay mas piezas en la lista, entonces introducimos un operador.
-                    if (listaPiezas.Count == 0)
+                    // Si no hay más piezas en la lista, entonces introducimos un operador
+                    if (listaPiezasDisponibles.Count == 0)
                     {
-                        IntroducirOperadorAleatorio(cromosoma, rnd);
+                        IntroducirOperadorAleatorio(listaGenes, rnd);
                     }
+                    // Si hay piezas en la lista, entonces hay 50% de probabilidad de introducir una pieza u operador
                     else
                     {
-                        // 50% de probabilidad de pieza u operador
                         int numeroAleatorio = rnd.Next(1, 3);
-
-                        // introducir pieza
+                        // Introducir pieza
                         if (numeroAleatorio == 1)
                         {
-                            IntroducirPiezaAleatoria(cromosoma, listaPiezas, rnd);
+                            IntroducirPiezaAleatoria(listaGenes, listaPiezasDisponibles, rnd);
                         }
-                        // introducir operador
+                        // Introducir operador
                         if (numeroAleatorio == 2)
                         {
-                            IntroducirOperadorAleatorio(cromosoma, rnd);
-                            // El cromosoma construido no puede debe ser válido
+                            IntroducirOperadorAleatorio(listaGenes, rnd);
+                            // Verificamos que el operador introduce genera un cromosoma postfijo
                             try
                             {
                                 Stack<System.Object> testPila = new Stack<System.Object>();
-                                ConstruirPilaDeCromosomaSimple(cromosoma, testPila);
+                                ConstruirPilaDeCromosomaSimple(listaGenes, testPila);
                             }
+                            // De lo contrario, removemos el operador introducido e introducimos una pieza
                             catch (Exception)
                             {
-                                cromosoma.RemoveAt(cromosoma.Count - 1);
-                                IntroducirPiezaAleatoria(cromosoma, listaPiezas, rnd);
+                                listaGenes.RemoveAt(listaGenes.Count - 1);
+                                IntroducirPiezaAleatoria(listaGenes, listaPiezasDisponibles, rnd);
                             }
                         }
                     }
                 }
             }
-            listaGenes = cromosoma;
+            this.listaGenes = listaGenes;
         }
 
-        // Operaciones de pila para el proceso de construcción,
-        // necesarios para saber si un cromosoma es válido.
-        public void ApilarSimple(Stack<System.Object> my_stack)
+        public List<string> ListaGenes { get => listaGenes; set => listaGenes = value; }
+        public Nodo Tree { get => tree; set => tree = value; }
+        public double Fitness { get => fitness; set => fitness = value; }
+
+        // Introduce a un cromosoma una pieza aleatoria de una lista de piezas disponibles
+        public void IntroducirPiezaAleatoria(List<String> listaGenes, List<String> listaPiezasDisponibles, System.Random rnd)
         {
-            System.Object o = new System.Object();
-            my_stack.Push(o);
+            String genPieza = "";
+            // Seleccionar aleatoriamente una pieza
+            int nroPieza = rnd.Next(0, listaPiezasDisponibles.Count);
+            genPieza += listaPiezasDisponibles[nroPieza];
+            // Seleccionar aleatoriamente si la pieza rota o no
+            int eleccionRotacion = rnd.Next(1, 3);
+            if (eleccionRotacion == 1) // La pieza no rota 90°
+            {
+                genPieza += "N";
+            }
+            else if (eleccionRotacion == 2) // La pieza rota 90°
+            {
+                genPieza += "R";
+            }
+
+            // Agrega la pieza al cromosoma
+            listaGenes.Add(genPieza);
+
+            // Remueve la pieza de la lista de piezas para que no sea anhadida posteriormente
+            listaPiezasDisponibles.Remove(listaPiezasDisponibles[nroPieza]);
         }
 
-        public void DesapilarYApilarSimple(Stack<System.Object> miPila)
+        // Introduce a un cromosoma un operador aleatorio
+        public void IntroducirOperadorAleatorio(List<String> listaGenes, System.Random rnd)
         {
-            // Desapilar 
-            System.Object first_node = miPila.Pop();
-            System.Object second_node = miPila.Pop();
-
-            System.Object o = new System.Object();
-            miPila.Push(o);
+            // Seleccionar aleatoriamente un operador H o V
+            int eleccionOperador = rnd.Next(1, 3);
+            if (eleccionOperador == 1) // Operador H
+            {
+                listaGenes.Add("H");
+            }
+            else if (eleccionOperador == 2) // Operador V
+            {
+                listaGenes.Add("V");
+            }
         }
 
-        public void ConstruirPilaDeCromosomaSimple(List<String> cromosoma, Stack<System.Object> miPila)
+        // Necesarios para saber si un cromosoma es válido.
+        public void ConstruirPilaDeCromosomaSimple(List<String> cromosoma, Stack<System.Object> pila)
         {
             for (int i = 0; i < cromosoma.Count; ++i)
             {
                 int n = -1;
-                // Si el gen del cromosoma es un número (tipo pieza),
-                // entonces necesitamos obtener ese numero
-                if (Utilities.EsNumero(cromosoma[i], out n))
+                // Si es una pieza, lo apilo
+                if (Utilitarios.EsPieza(cromosoma[i], out n))
                 {
-                    ApilarSimple(miPila);
+                    Utilitarios.ApilarSimple(pila);
                 }
-                else // not a number -> V or H
+                // Si es un operador, desapilo dos piezas y las opero
+                else
                 {
-                    DesapilarYApilarSimple(miPila);
+                    Utilitarios.DesapilarYApilarSimple(pila);
                 }
             }
         }
+
+
     }
 
 }

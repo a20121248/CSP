@@ -38,6 +38,7 @@
             this.lblPesoFactorCuadratura = new System.Windows.Forms.Label();
             this.btnIniciar = new System.Windows.Forms.Button();
             this.btnVerResultado = new System.Windows.Forms.Button();
+            this.btnVerStockInfinito = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtProbabilidadMutacion
@@ -128,11 +129,22 @@
             this.btnVerResultado.UseVisualStyleBackColor = true;
             this.btnVerResultado.Click += new System.EventHandler(this.btnVerResultado_Click);
             // 
+            // btnVerStockInfinito
+            // 
+            this.btnVerStockInfinito.Location = new System.Drawing.Point(258, 192);
+            this.btnVerStockInfinito.Name = "btnVerStockInfinito";
+            this.btnVerStockInfinito.Size = new System.Drawing.Size(61, 23);
+            this.btnVerStockInfinito.TabIndex = 9;
+            this.btnVerStockInfinito.Text = "Ver";
+            this.btnVerStockInfinito.UseVisualStyleBackColor = true;
+            this.btnVerStockInfinito.Click += new System.EventHandler(this.btnVerStockInfinito_Click);
+            // 
             // FormGenetico
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(349, 261);
+            this.Controls.Add(this.btnVerStockInfinito);
             this.Controls.Add(this.btnVerResultado);
             this.Controls.Add(this.btnIniciar);
             this.Controls.Add(this.lblPesoFactorCuadratura);
@@ -162,5 +174,6 @@
         private System.Windows.Forms.Label lblPesoFactorCuadratura;
         private System.Windows.Forms.Button btnIniciar;
         private System.Windows.Forms.Button btnVerResultado;
+        private System.Windows.Forms.Button btnVerStockInfinito;
     }
 }

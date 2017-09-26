@@ -31,7 +31,6 @@
             this.btnRutaArchPedidos = new System.Windows.Forms.Button();
             this.txtRutaArchPedidos = new System.Windows.Forms.TextBox();
             this.gbDatos = new System.Windows.Forms.GroupBox();
-            this.btnCargar = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.btnRutaArchStock = new System.Windows.Forms.Button();
             this.txtRutaArchStock = new System.Windows.Forms.TextBox();
@@ -61,7 +60,6 @@
             // 
             // gbDatos
             // 
-            this.gbDatos.Controls.Add(this.btnCargar);
             this.gbDatos.Controls.Add(this.label2);
             this.gbDatos.Controls.Add(this.btnRutaArchStock);
             this.gbDatos.Controls.Add(this.txtRutaArchStock);
@@ -70,20 +68,10 @@
             this.gbDatos.Controls.Add(this.txtRutaArchPedidos);
             this.gbDatos.Location = new System.Drawing.Point(12, 49);
             this.gbDatos.Name = "gbDatos";
-            this.gbDatos.Size = new System.Drawing.Size(494, 110);
+            this.gbDatos.Size = new System.Drawing.Size(494, 83);
             this.gbDatos.TabIndex = 2;
             this.gbDatos.TabStop = false;
             this.gbDatos.Text = "Datos";
-            // 
-            // btnCargar
-            // 
-            this.btnCargar.Location = new System.Drawing.Point(215, 79);
-            this.btnCargar.Name = "btnCargar";
-            this.btnCargar.Size = new System.Drawing.Size(75, 23);
-            this.btnCargar.TabIndex = 6;
-            this.btnCargar.Text = "Cargar";
-            this.btnCargar.UseVisualStyleBackColor = true;
-            this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
             // 
             // label2
             // 
@@ -135,7 +123,7 @@
             // 
             this.btnGenetico.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenetico.ForeColor = System.Drawing.Color.Blue;
-            this.btnGenetico.Location = new System.Drawing.Point(87, 185);
+            this.btnGenetico.Location = new System.Drawing.Point(87, 158);
             this.btnGenetico.Name = "btnGenetico";
             this.btnGenetico.Size = new System.Drawing.Size(132, 41);
             this.btnGenetico.TabIndex = 4;
@@ -147,7 +135,7 @@
             // 
             this.btnCuckooSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCuckooSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.btnCuckooSearch.Location = new System.Drawing.Point(300, 185);
+            this.btnCuckooSearch.Location = new System.Drawing.Point(300, 158);
             this.btnCuckooSearch.Name = "btnCuckooSearch";
             this.btnCuckooSearch.Size = new System.Drawing.Size(132, 41);
             this.btnCuckooSearch.TabIndex = 5;
@@ -159,7 +147,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 245);
+            this.ClientSize = new System.Drawing.Size(518, 233);
             this.Controls.Add(this.btnCuckooSearch);
             this.Controls.Add(this.btnGenetico);
             this.Controls.Add(this.lblTitulo);
@@ -182,7 +170,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnRutaArchStock;
         private System.Windows.Forms.TextBox txtRutaArchStock;
-        private System.Windows.Forms.Button btnCargar;
         private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.Button btnGenetico;
         private System.Windows.Forms.Button btnCuckooSearch;

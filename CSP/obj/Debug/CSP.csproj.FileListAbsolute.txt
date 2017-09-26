@@ -13,3 +13,5 @@ C:\Users\Javier\source\repos\CSP\CSP\bin\Debug\CSP.pdb
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.exe
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.pdb
 C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormStocks.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormResultadoStockInfinito.resources
+C:\Users\Javier\source\repos\CSP\CSP\obj\Debug\CSP.View.FormCargando.resources

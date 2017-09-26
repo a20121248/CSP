@@ -45,15 +45,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controller\AlgoritmoCuckooSearch.cs" />
+    <Compile Include="Controller\AlgoritmoDefectos.cs" />
     <Compile Include="Controller\AlgoritmoGenetico.cs" />
-    <Compile Include="Controller\Utilities.cs" />
+    <Compile Include="Controller\AlgoritmoStocks.cs" />
+    <Compile Include="Controller\CuttingStockProblem.cs" />
+    <Compile Include="Controller\Lector.cs" />
+    <Compile Include="Controller\Utilitarios.cs" />
     <Compile Include="Model\Cromosoma.cs" />
+    <Compile Include="Model\Data.cs" />
     <Compile Include="Model\Poblacion.cs" />
     <Compile Include="Model\Rectangulo.cs" />
     <Compile Include="Model\Nodo.cs" />
     <Compile Include="Model\Stock.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\FormCargando.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FormCargando.Designer.cs">
+      <DependentUpon>FormCargando.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\FormCuckooSearch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +90,12 @@
     <Compile Include="View\FormResultado.Designer.cs">
       <DependentUpon>FormResultado.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\FormResultadoStockInfinito.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FormResultadoStockInfinito.Designer.cs">
+      <DependentUpon>FormResultadoStockInfinito.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\FormStocks.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -93,6 +111,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\FormCargando.resx">
+      <DependentUpon>FormCargando.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\FormCuckooSearch.resx">
       <DependentUpon>FormCuckooSearch.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,6 +125,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\FormResultado.resx">
       <DependentUpon>FormResultado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\FormResultadoStockInfinito.resx">
+      <DependentUpon>FormResultadoStockInfinito.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FormStocks.resx">
       <DependentUpon>FormStocks.cs</DependentUpon>
@@ -149,6 +173,10 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\CuckooSearch\" />
+    <Folder Include="Model\Genetico\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
