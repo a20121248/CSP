@@ -10,22 +10,24 @@ namespace CSP.Controller
 {
     class AlgoritmoStocks
     {
-        public List<Nodo> listaNodos;
         public List<Stock> listaStocks;
 
-        public AlgoritmoStocks(List<Stock> listaStocks, Cromosoma cromosoma)
+        public AlgoritmoStocks(List<Stock> listaStocks, Nodo arbol)
         {
             this.listaStocks = listaStocks;
-
-            Algoritmo(cromosoma);
+            foreach (Stock stock in this.listaStocks)
+            {
+                stock.Arbol = null;
+            }
+            Algoritmo(arbol);
         }
 
-        public void CrearListaBloques(Nodo raiz)
+        public List<Nodo> CrearListaBloques(Nodo raiz)
         {
-            this.listaNodos = new List<Nodo>();
+            List<Nodo> listaNodos = new List<Nodo>();
             if (raiz == null)
             {
-                return;
+                return null;
             }
 
             int id_padre = 0;
@@ -53,6 +55,7 @@ namespace CSP.Controller
                     nodo.Izquierdo.IdPadre = id_padre;
                 }
             }
+            return listaNodos;
         }
         
         public static int CompararAreaNodo(Nodo nodo1, Nodo nodo2)
@@ -78,10 +81,10 @@ namespace CSP.Controller
             EliminarSubArboles(miListaNodos, nodo_padre.Derecho);
         }
 
-        public void Algoritmo(Cromosoma cromosoma)
+        public void Algoritmo(Nodo arbol)
         {
             // En esta funcion creo todos los arboles posibles en un recorrido postorden
-            CrearListaBloques(cromosoma.Tree);
+            List<Nodo> listaNodos = CrearListaBloques(arbol);
 
             // Ahora selecciono los adecuados
             // Ordeno la lista de mayor a menor en base al area que ocupan (importante!)

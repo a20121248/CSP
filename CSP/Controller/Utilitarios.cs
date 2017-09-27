@@ -9,6 +9,36 @@ namespace CSP.Controller
 {
     static class Utilitarios
     {
+        public static double CalcularDesperdicio(List<Stock> listaStocks, List<Rectangulo> listaPiezas)
+        {
+            double area1 = 0;
+            foreach (Rectangulo pieza in listaPiezas)
+            {
+                area1 += pieza.W * pieza.H;
+            }
+
+            double area2 = 0;
+            foreach (Stock stock in listaStocks)
+            {
+                if (stock.Arbol != null)
+                {
+                    area2 += stock.W * stock.H;
+                    //desperdicio += (anchoStock * altoStock - anchoOcupadoPiezas * altoOcupadoPiezas);
+                }
+            }
+
+            return 5 * (area1 / area2);
+        }
+
+        public static Nodo ConstruirArbolYCalcularPosicionesAPartirDeLista(List<String> ListaStr, List<Rectangulo> listaPiezas)
+        {
+            // Construimos el árbol a partir de la notación postfija del cromosoma
+            Nodo arbol = Utilitarios.ConstruirArbolDeUnaLista(ListaStr, listaPiezas);
+            // Una vez construido el árbol, calculamos las posiciones relativas (dependiendo del bloque al que pertenenece)
+            Utilitarios.CalcularPosiciones(arbol);
+            return arbol;
+        }
+
         public static String RotarPiezaAleatorio(String pieza, System.Random rnd)
         {
             // Si no es pieza devolvemos el operador tal cual
@@ -28,10 +58,10 @@ namespace CSP.Controller
         }
 
         // sets the positions of the pieces doing a inorder traversal to the tree (once built)
-        public static void CalcularPosiciones(Nodo root)
+        public static void CalcularPosiciones(Nodo raiz)
         {
             // BASE CASE: if this node is a leaf, do not do anything
-            if (root.Izquierdo == null)
+            if (raiz.Izquierdo == null)
             {
                 return;
             }
@@ -41,40 +71,40 @@ namespace CSP.Controller
             else
             {
                 // Recursive calls first for a post-order traversal
-                CalcularPosiciones(root.Izquierdo);
-                CalcularPosiciones(root.Derecho);
+                CalcularPosiciones(raiz.Izquierdo);
+                CalcularPosiciones(raiz.Derecho);
 
                 // Then, do the actions
-                root.Izquierdo.Rect.X = 0;
-                root.Izquierdo.Rect.Y = 0;
+                raiz.Izquierdo.Rect.X = 0;
+                raiz.Izquierdo.Rect.Y = 0;
 
-                if (root.TipoIntegracion == "V")
+                if (raiz.TipoIntegracion == "V")
                 {
                     // if it is V integrated, the second (right child) piece is put under the first (left child) one
-                    root.Derecho.Rect.X = 0;
-                    root.Derecho.Rect.Y = 0 + root.Izquierdo.Rect.H;
+                    raiz.Derecho.Rect.X = 0;
+                    raiz.Derecho.Rect.Y = 0 + raiz.Izquierdo.Rect.H;
                 }
-                else if (root.TipoIntegracion == "H")
+                else if (raiz.TipoIntegracion == "H")
                 {
                     // if it is H integrated, the second piece is put to the right of the first one
-                    root.Derecho.Rect.X = 0 + root.Izquierdo.Rect.W;
-                    root.Derecho.Rect.Y = 0;
+                    raiz.Derecho.Rect.X = 0 + raiz.Izquierdo.Rect.W;
+                    raiz.Derecho.Rect.Y = 0;
                 }
             }
         }
 
-        public static Nodo ConstruirArbolDeUnCromosomas(List<String> cromosoma, List<Rectangulo> listaPiezas)
+        public static Nodo ConstruirArbolDeUnaLista(List<String> ListaStr, List<Rectangulo> listaPiezas)
         {
             Stack<Nodo> nodoPila = new Stack<Nodo>();
-            for (int i = 0; i < cromosoma.Count; ++i)
+            for (int i = 0; i < ListaStr.Count; ++i)
             {
                 int n = -1;
                 // Si el gen es una pieza, entonces la apilamos
-                if (Utilitarios.EsPieza(cromosoma[i], out n))
+                if (Utilitarios.EsPieza(ListaStr[i], out n))
                 {
                     // El segundo parámetro de la pila es el id de la pieza empezando desde 0 (es por ello que restamos 1)
                     // Por ejemplo, si es la pieza 3, entonces queremos apilar la pieza en la posición 2
-                    ApilarPieza(nodoPila, n - 1, cromosoma[i].Substring(cromosoma[i].Length - 1, 1), listaPiezas);
+                    ApilarPieza(nodoPila, n - 1, ListaStr[i].Substring(ListaStr[i].Length - 1, 1), listaPiezas);
                 }
                 else // Si es un operador, desapilamos los dos últimos bloques y operamos
                 {
@@ -82,7 +112,7 @@ namespace CSP.Controller
                     {
                         int a = 1;
                     }
-                    DesapilaOperadorYApilaBloque(nodoPila, cromosoma[i]);
+                    DesapilaOperadorYApilaBloque(nodoPila, ListaStr[i]);
                 }
             }
             // En este momento, en la pila solo hay un elemento y sería el árbol construido

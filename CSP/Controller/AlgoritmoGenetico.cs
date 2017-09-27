@@ -16,18 +16,23 @@ namespace CSP.Controller
         private double pesoFactorMinimizacion;
         private double pesoFactorCuadratura;
         private BackgroundWorker worker;
+        private List<Stock> listaStocks;
 
-        public AlgoritmoGenetico(int numMaxGeneraciones, List<Rectangulo> listaPiezas, double probabilidadMutacion, int tamanhoPoblacion, double pesoFactorMinimizacion, double pesoFactorCuadratura, int cantElitismo, BackgroundWorker worker)
+        public AlgoritmoGenetico(int numMaxGeneraciones, List<Rectangulo> listaPiezas,  double probabilidadMutacion,
+                                 int tamanhoPoblacion,   double pesoFactorMinimizacion, double pesoFactorCuadratura,
+                                 int cantElitismo,       List<Stock> listaStocks,       BackgroundWorker worker)
         {
             // Iniciar parámetros del algoritmo
             System.Random rnd = new System.Random();
             this.worker = worker;
             this.pesoFactorMinimizacion = pesoFactorMinimizacion;
             this.pesoFactorCuadratura = pesoFactorCuadratura;
+            this.listaStocks = listaStocks;
 
             // Crear la poblacion inicial
             Poblacion poblacion = CalcularPoblacionInicial(tamanhoPoblacion, probabilidadMutacion, listaPiezas, rnd);
             this.mejorCromosoma = poblacion.ListaCromosomas[0];
+            
             // Calcular hasta un maximo de generaciones (o agregar condicion de parada de Nilton)
             for (int i = 0; i < numMaxGeneraciones; ++i)
             {
@@ -46,7 +51,7 @@ namespace CSP.Controller
                 worker.ReportProgress(progreso);
             }
             this.mejorCromosoma = poblacion.ListaCromosomas[0];
-
+            
             //Debug_prueba(listaPiezas);
         }
         
@@ -447,14 +452,11 @@ namespace CSP.Controller
 
         public void CalcularCromosoma(Cromosoma cromosoma, List<Rectangulo> listaPiezas)
         {
-            // Construimos el árbol a partir de la notación postfija del cromosoma
-            Nodo tree = Utilitarios.ConstruirArbolDeUnCromosomas(cromosoma.ListaGenes, listaPiezas);
+            cromosoma.Arbol = Utilitarios.ConstruirArbolYCalcularPosicionesAPartirDeLista(cromosoma.ListaGenes, listaPiezas);
 
-            // Una vez construido el árbol, calculamos las posiciones relativas (dependiendo del bloque al que pertenenece)
-            Utilitarios.CalcularPosiciones(tree);
-            cromosoma.Tree = tree;
-
-            cromosoma.Fitness = Utilitarios.CalcularFitness(tree, listaPiezas, pesoFactorMinimizacion, pesoFactorCuadratura);
+            AlgoritmoStocks algoritmoStocks = new AlgoritmoStocks(listaStocks, cromosoma.Arbol);
+            cromosoma.Fitness = Utilitarios.CalcularDesperdicio(listaStocks, listaPiezas);
+            //cromosoma.Fitness = Utilitarios.CalcularFitness(cromosoma.Arbol, listaPiezas, pesoFactorMinimizacion, pesoFactorCuadratura);
         }
 
         public void Debug_prueba(List<Rectangulo> milistaPiezas)

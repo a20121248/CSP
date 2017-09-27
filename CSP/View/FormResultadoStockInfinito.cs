@@ -38,7 +38,7 @@ namespace CSP.View
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             //Nodo arbol_solucion = listaArboles[i++];
-            Nodo arbol_solucion = this.cromosoma.Tree;
+            Nodo arbol_solucion = this.cromosoma.Arbol;
             if (arbol_solucion != null)
             {
                 DibujarPiezas(e.Graphics, arbol_solucion,

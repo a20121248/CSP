@@ -66,7 +66,14 @@ namespace CSP.View
                     lector.LeerArchStocks();
                     break;
                 case ALGORITMO_GENETICO:
-                    csp.IniciarAlgoritmoGenetico(data.ProbabilidadMutacion, data.TamanhoPoblacion, data.PesoMinimizarRectangulo, data.PesoFactorCuadratura, backgroundWorker1);
+                    csp.IniciarAlgoritmoGenetico(data.ProbabilidadMutacion,
+                                                 data.TamanhoPoblacion,
+                                                 data.PesoMinimizarRectangulo,
+                                                 data.PesoFactorCuadratura,
+                                                 data.CantMaxGeneraciones,
+                                                 data.CantidadElitismo,
+                                                 data.ListaStocks,
+                                                 backgroundWorker1);
                     break;
                 case ALGOTIMO_CUCKOO_SEARCH:
                     break;

@@ -12,7 +12,6 @@ namespace CSP.Model
         private int id;
         private float w, h;
         private List<Rectangulo> listaDefectos;
-        private Cromosoma solucion;
         private float x;
         private float y;
         private Nodo arbol;
@@ -23,7 +22,6 @@ namespace CSP.Model
             this.w = otro.W;
             this.h = otro.H;
             this.listaDefectos = otro.ListaDefectos;
-            this.solucion = otro.Solucion;
             this.arbol = otro.Arbol;
         }
 
@@ -33,7 +31,6 @@ namespace CSP.Model
             this.w = w;
             this.h = h;
             this.listaDefectos = new List<Rectangulo>();
-            this.solucion = null;
             this.arbol = null;
         }
 
@@ -52,7 +49,6 @@ namespace CSP.Model
         public float W { get => w; set => w = value; }
         public float H { get => h; set => h = value; }
         public List<Rectangulo> ListaDefectos { get => listaDefectos; set => listaDefectos = value; }
-        public Cromosoma Solucion { get => solucion; set => solucion = value; }
         public float X { get => x; set => x = value; }
         public float Y { get => y; set => y = value; }
         public Nodo Arbol { get => arbol; set => arbol = value; }

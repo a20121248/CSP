@@ -14,12 +14,12 @@ namespace CSP.Controller
         private List<Rectangulo> listaPiezas;
         public List<Stock> listaStocks;
 
-        public AlgoritmoGenetico algoritmoGenetico;
-        public AlgoritmoCuckooSearch algoritmoCuckooSearch;
-        public AlgoritmoStocks algoritmoStocks;
-        public AlgoritmoDefectos algoritmoDefectos;
+        private AlgoritmoGenetico algoritmoGenetico;
+        private AlgoritmoCuckooSearch algoritmoCuckooSearch;
+        private AlgoritmoStocks algoritmoStocks;
+        private AlgoritmoDefectos algoritmoDefectos;
 
-        public Cromosoma cromosoma;
+        public Nodo arbolSolucion;
 
         public CuttingStockProblem(List<Rectangulo> listaPiezas, List<Stock> listaStocks)
         {
@@ -27,15 +27,14 @@ namespace CSP.Controller
             this.listaStocks = listaStocks;
         }
 
-        
-
-        public void IniciarAlgoritmoGenetico(double probabilidadMutacion, int tamanhoPoblacion, double pesoMinimizarRectangulo, double pesoFactorCuadratura, BackgroundWorker worker)
+        public void IniciarAlgoritmoGenetico(double probabilidadMutacion, int tamanhoPoblacion,   double pesoMinimizarRectangulo,
+                                             double pesoFactorCuadratura, int numMaxGeneraciones, int cantElitismo,
+                                             List<Stock> listaStocks,     BackgroundWorker worker)
         {
-            this.algoritmoGenetico = new AlgoritmoGenetico(1000, listaPiezas, probabilidadMutacion, tamanhoPoblacion, pesoMinimizarRectangulo, pesoFactorCuadratura, 1, worker);
-            this.cromosoma = this.algoritmoGenetico.mejorCromosoma;
-            //solucion = algGenetico.mejorCromosoma.ListaGenes;
-            //fitness = algGenetico.mejorCromosoma.Fitness;
-            //arbol_solucion = algGenetico.mejorCromosoma.Tree;
+            this.algoritmoGenetico = new AlgoritmoGenetico(numMaxGeneraciones, listaPiezas,             probabilidadMutacion,
+                                                           tamanhoPoblacion,   pesoMinimizarRectangulo, pesoFactorCuadratura,
+                                                           cantElitismo,       listaStocks,             worker);
+            this.arbolSolucion = this.algoritmoGenetico.mejorCromosoma.Arbol;
         }
 
         public void IniciarAlgoritmoCuckooSearch()
@@ -45,7 +44,7 @@ namespace CSP.Controller
 
         public void IniciarAlgoritmoStocks()
         {
-            this.algoritmoStocks = new AlgoritmoStocks(this.listaStocks, this.algoritmoGenetico.mejorCromosoma);
+            this.algoritmoStocks = new AlgoritmoStocks(this.listaStocks, arbolSolucion);
             this.listaStocks = this.algoritmoStocks.listaStocks;
         }
 

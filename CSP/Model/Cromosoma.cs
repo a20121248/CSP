@@ -10,7 +10,7 @@ namespace CSP.Model
     public class Cromosoma
     {
         private List<String> listaGenes;
-        private Nodo tree;
+        private Nodo arbol;
         private double fitness;
 
         public String Cadena { get => Utilitarios.ImprimirLista(listaGenes);}
@@ -114,7 +114,7 @@ namespace CSP.Model
         }
 
         public List<string> ListaGenes { get => listaGenes; set => listaGenes = value; }
-        public Nodo Tree { get => tree; set => tree = value; }
+        public Nodo Arbol { get => arbol; set => arbol = value; }
         public double Fitness { get => fitness; set => fitness = value; }
 
         // Introduce a un cromosoma una pieza aleatoria de una lista de piezas disponibles

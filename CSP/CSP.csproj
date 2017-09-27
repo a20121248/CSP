@@ -66,16 +66,16 @@
     <Compile Include="View\FormCargando.Designer.cs">
       <DependentUpon>FormCargando.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\FormCuckooSearch.cs">
+    <Compile Include="View\FormAlgoritmo\FormCuckooSearch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\FormCuckooSearch.Designer.cs">
+    <Compile Include="View\FormAlgoritmo\FormCuckooSearch.Designer.cs">
       <DependentUpon>FormCuckooSearch.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\FormGenetico.cs">
+    <Compile Include="View\FormAlgoritmo\FormGenetico.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\FormGenetico.Designer.cs">
+    <Compile Include="View\FormAlgoritmo\FormGenetico.Designer.cs">
       <DependentUpon>FormGenetico.cs</DependentUpon>
     </Compile>
     <Compile Include="View\FormPedidos.cs">
@@ -114,10 +114,10 @@
     <EmbeddedResource Include="View\FormCargando.resx">
       <DependentUpon>FormCargando.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FormCuckooSearch.resx">
+    <EmbeddedResource Include="View\FormAlgoritmo\FormCuckooSearch.resx">
       <DependentUpon>FormCuckooSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FormGenetico.resx">
+    <EmbeddedResource Include="View\FormAlgoritmo\FormGenetico.resx">
       <DependentUpon>FormGenetico.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\FormPedidos.resx">

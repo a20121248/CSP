@@ -22,9 +22,10 @@ namespace CSP.View
         public Pen penRojo, penNegro;
         public float factorImg = 2.5f;
 
+        private double desperdicio;
         private List<Stock> listaStocksConPiezas;
 
-        public FormResultado(List<Stock> listaStocksConPiezas)
+        public FormResultado(List<Stock> listaStocksConPiezas, List<Rectangulo> listaPiezas)
         {
             InitializeComponent();
             /*
@@ -34,9 +35,12 @@ namespace CSP.View
             listaPiezas = formGenetico.listaPiezas;
             listaStocks = formGenetico.listaStocks;
             */
+            this.desperdicio = Utilitarios.CalcularDesperdicio(listaStocksConPiezas, listaPiezas);
             this.listaStocksConPiezas = listaStocksConPiezas;
             InicializarColores();
             InicializarPosicionesStocks();
+
+            this.txtFitness.Text = string.Format("{0:#,0.00}", this.desperdicio);
         }
 
         private void InicializarPosicionesStocks()

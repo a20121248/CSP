@@ -15,7 +15,7 @@ namespace CSP.View
     internal partial class FormGenetico : Form
     {
         private CuttingStockProblem csp;
-        private Cromosoma cromosoma;
+        private Nodo arbol;
         private List<Stock> listaStocksConPiezas;
         private List<Rectangulo> listaPiezas;
 
@@ -23,7 +23,11 @@ namespace CSP.View
         {
             InitializeComponent();
             this.listaPiezas = formPedidos.listaPiezas;
+            this.listaStocksConPiezas = formPedidos.listaStocks;
             csp = new CuttingStockProblem(formPedidos.listaPiezas, formPedidos.listaStocks);
+
+            this.cmbTipoCruce.SelectedIndex = 0;
+            this.cmbTipoSeleccion.SelectedIndex = 0;
         }
 
         private void btnIniciar_Click(object sender, EventArgs e)
@@ -32,16 +36,17 @@ namespace CSP.View
             int tamanhoPoblacion = int.Parse(txtTamanhoPoblacion.Text);
             double pesoMinimizarRectangulo = double.Parse(txtPesoMinimizarRectangulo.Text);
             double pesoFactorCuadratura = double.Parse(txtPesoFactorCuadratura.Text);
+            int cantidadElitismo = int.Parse(txtCantidadElitismo.Text);
+            int cantMaxGeneraciones = int.Parse(txtCantMaxGeneraciones.Text);
 
-            Data data = new Data(probabilidadMutacion, tamanhoPoblacion, pesoMinimizarRectangulo, pesoFactorCuadratura);
+            Data data = new Data(probabilidadMutacion, tamanhoPoblacion, pesoMinimizarRectangulo, pesoFactorCuadratura, cantidadElitismo, cantMaxGeneraciones, listaStocksConPiezas);
             FormCargando loading = new FormCargando(FormCargando.ALGORITMO_GENETICO, csp, data);
             loading.ShowDialog(this);
 
-            //csp.IniciarAlgoritmoGenetico(probabilidadMutacion, tamanhoPoblacion, pesoMinimizarRectangulo, pesoFactorCuadratura);
             csp.IniciarAlgoritmoStocks();
             csp.IniciarAlgoritmoDefectos();
 
-            this.cromosoma = csp.cromosoma;
+            //this.arbol = csp.cromosoma.Arbol;
             this.listaStocksConPiezas = csp.listaStocks;
 
 
@@ -55,14 +60,14 @@ namespace CSP.View
 
         private void btnVerResultado_Click(object sender, EventArgs e)
         {
-            FormResultado formResultado = new FormResultado(this.listaStocksConPiezas);
+            FormResultado formResultado = new FormResultado(this.listaStocksConPiezas, this.listaPiezas);
             formResultado.Show();
         }
 
         private void btnVerStockInfinito_Click(object sender, EventArgs e)
         {
-            FormResultadoStockInfinito formResultadoStockInfinito = new FormResultadoStockInfinito(this.csp.algoritmoGenetico.CrearCromosoma(this.cromosoma.ListaGenes, this.listaPiezas));
-            formResultadoStockInfinito.Show();
+            //FormResultadoStockInfinito formResultadoStockInfinito = new FormResultadoStockInfinito(this.csp.algoritmoGenetico.CrearCromosoma(this.cromosoma.ListaGenes, this.listaPiezas));
+            //formResultadoStockInfinito.Show();
         }
     }
 }
