@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\AlgoritmoCuckooSearch.cs" />
-    <Compile Include="Controller\AlgoritmoDefectos.cs" />
     <Compile Include="Controller\AlgoritmoGenetico.cs" />
     <Compile Include="Controller\AlgoritmoStocks.cs" />
     <Compile Include="Controller\CuttingStockProblem.cs" />

@@ -44,7 +44,6 @@ namespace CSP.View
             loading.ShowDialog(this);
 
             csp.IniciarAlgoritmoStocks();
-            csp.IniciarAlgoritmoDefectos();
 
             //this.arbol = csp.cromosoma.Arbol;
             this.listaStocksConPiezas = csp.listaStocks;

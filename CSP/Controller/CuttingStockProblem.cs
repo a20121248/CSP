@@ -17,7 +17,6 @@ namespace CSP.Controller
         private AlgoritmoGenetico algoritmoGenetico;
         private AlgoritmoCuckooSearch algoritmoCuckooSearch;
         private AlgoritmoStocks algoritmoStocks;
-        private AlgoritmoDefectos algoritmoDefectos;
 
         public Nodo arbolSolucion;
 
@@ -46,11 +45,6 @@ namespace CSP.Controller
         {
             this.algoritmoStocks = new AlgoritmoStocks(this.listaStocks, arbolSolucion);
             this.listaStocks = this.algoritmoStocks.listaStocks;
-        }
-
-        public void IniciarAlgoritmoDefectos()
-        {
-            this.algoritmoDefectos = new AlgoritmoDefectos();
         }
     }
 }

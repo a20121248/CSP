@@ -28,6 +28,7 @@ namespace CSP.View
         public FormResultado(List<Stock> listaStocksConPiezas, List<Rectangulo> listaPiezas)
         {
             InitializeComponent();
+
             /*
             txtMejorSolucion.Text = Utilitarios.ConvertirListaACadena(formGenetico.solucion);
             txtFitness.Text = string.Format("{0:0.00}", formGenetico.fitness);
@@ -36,6 +37,7 @@ namespace CSP.View
             listaStocks = formGenetico.listaStocks;
             */
             this.desperdicio = Utilitarios.CalcularDesperdicio(listaStocksConPiezas, listaPiezas);
+            this.listaPiezas = listaPiezas;
             this.listaStocksConPiezas = listaStocksConPiezas;
             InicializarColores();
             InicializarPosicionesStocks();
@@ -128,11 +130,25 @@ namespace CSP.View
         {
             foreach (Stock stock in this.listaStocksConPiezas)
             {
+                gr.DrawString(string.Format("Stock #{0}: {1}x{2}", stock.Id, stock.W, stock.H),
+                     new Font("Arial", 10, FontStyle.Bold), Brushes.Black, stock.X, stock.Y - 15);
+
                 int id = stock.Id;
                 float h = stock.H;
                 float w = stock.W;
-                //gr.DrawRectangle(listaPencils[id], 0, 0, w, h);
                 gr.DrawRectangle(penRojo, stock.X, stock.Y, w, h);
+
+                // Dibujar los defectos
+                foreach (Rectangulo defecto in stock.ListaDefectos)
+                {
+                    float x_def = stock.X + defecto.X;
+                    float y_def = stock.Y + defecto.Y;
+                    float w_def = defecto.W;
+                    float h_def = defecto.H;
+                    Rectangle rect = new Rectangle((int) x_def, (int) y_def, (int) w_def, (int) h_def);
+                    gr.FillRectangle(Brushes.Black, rect);
+                    gr.DrawRectangle(penRojo, x_def, y_def, w_def, h_def);
+                }
             }
         }
 
@@ -146,8 +162,7 @@ namespace CSP.View
             int offset = 30;
             int x = 20;
             int y = 150;
-            //for (int i = 0; i < listaPiezas.Count; ++i)
-            for (int i = 0; i < 20; ++i)
+            for (int i = 0; i < listaPiezas.Count; ++i)
             {
                 Rectangle rect = new Rectangle(x, y, ancho, alto);
                 e.Graphics.FillRectangle(listaBrushes[i], rect);
@@ -163,11 +178,9 @@ namespace CSP.View
             e.Graphics.Clear(splitContainer1.Panel1.BackColor);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            DibujarStocks(e.Graphics);
             int i = 0;
             foreach (Stock stock in this.listaStocksConPiezas)
             {
-                //Nodo arbol_solucion = listaArboles[i++];
                 Nodo arbol_solucion = stock.Arbol;
                 if (arbol_solucion != null) {
                     DibujarPiezas(e.Graphics, arbol_solucion,
@@ -175,17 +188,7 @@ namespace CSP.View
                                   stock.Y + arbol_solucion.Rect.Y);
                 }
             }
-            /*
-            foreach (Stock stock in this.listaStocksConPiezas)
-            {
-                Nodo arbol_solucion = stock.Solucion.Tree;
-                if (arbol_solucion != null) {
-                    DibujarPiezas(e.Graphics, arbol_solucion,
-                                  stock.X + arbol_solucion.Rect.X,
-                                  stock.Y + arbol_solucion.Rect.Y);
-                }
-            }
-            */
+            DibujarStocks(e.Graphics);
         }
     }
 }

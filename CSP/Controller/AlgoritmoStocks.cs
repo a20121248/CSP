@@ -20,6 +20,121 @@ namespace CSP.Controller
                 stock.Arbol = null;
             }
             Algoritmo(arbol);
+
+            Algoritmo2();
+        }
+
+        public String SePuedeInsertar(Rectangulo pieza, Stock stock)
+        {
+            float pieza_ancho = stock.Arbol.Rect.W;
+            float pieza_alto = stock.Arbol.Rect.H;
+
+            // Integrar horizontal
+            float ancho_horizontal = pieza_ancho + pieza.W;
+            float alto_horizontal = Math.Max(pieza_alto, pieza.H);
+
+            // Integrar vertical
+            float ancho_vertical = Math.Max(pieza_ancho, pieza.W);
+            float alto_vertical = pieza_alto + pieza.H;
+
+            if (ancho_horizontal <= stock.W &&
+                alto_horizontal <= stock.H)
+            {
+                return "H";
+            }
+            else if (ancho_vertical <= stock.W &&
+                     alto_vertical <= stock.H)
+            {
+                return "V";
+            }
+            else
+            {
+                return "No";
+            }
+        }
+
+        public void InsertarPiezaEnUnStock(Rectangulo pieza)
+        {
+            foreach (Stock stock in listaStocks)
+            {
+                Nodo arbol = stock.Arbol;
+                Nodo segundoNodo = new Nodo(new Rectangulo(pieza));
+                // Si el stock está vacío, lo inserto directamente
+                if (arbol == null)
+                {
+                    segundoNodo.Rect.X = 0;
+                    segundoNodo.Rect.Y = 0;
+                    stock.Arbol = segundoNodo;
+                    return;
+                }
+                // Si tiene piezas, entonces busco el operador de
+                // integración de modo que ocupe la menor área.
+                else
+                {
+                    Rectangulo piezaIntegrada;
+                    // Devuelve H o V
+                    String tipoIntegracion = SePuedeInsertar(pieza, stock);
+                    
+                    // Integrar con operador H
+                    if (tipoIntegracion == "H")
+                    {
+                        float anchoIntegrado = arbol.Rect.W + segundoNodo.Rect.W;
+                        float altoIntegrado = Math.Max(arbol.Rect.H, segundoNodo.Rect.H);
+                        piezaIntegrada = new Rectangulo(0, 0, anchoIntegrado, altoIntegrado);
+                    }
+                    // Integrar con operador V
+                    else if (tipoIntegracion == "V")
+                    {
+                        float anchoIntegrado = Math.Max(arbol.Rect.W, segundoNodo.Rect.W);
+                        float altoIntegrado = arbol.Rect.H + segundoNodo.Rect.H;
+                        piezaIntegrada = new Rectangulo(0, 0, anchoIntegrado, altoIntegrado);
+                    }
+                    // No se puede integrar
+                    else
+                    {
+                        continue;
+                    }
+
+                    // Crear un nodo que contiene el rectángulo integrado
+                    Nodo nodo_rectanguloIntegrado = new Nodo(piezaIntegrada);
+
+                    // Agrega el tipo de integración al rectángulo
+                    nodo_rectanguloIntegrado.TipoIntegracion = tipoIntegracion;
+
+                    // Agrega los hijos izquierdo y derecho al nodo, considerando que es una pila
+                    nodo_rectanguloIntegrado.Izquierdo = arbol;
+                    nodo_rectanguloIntegrado.Derecho = segundoNodo;
+
+                    Utilitarios.CalcularPosiciones(nodo_rectanguloIntegrado);
+                    Utilitarios.CalcularPosicionesAbsolutas(nodo_rectanguloIntegrado, 0, 0);
+                    stock.Arbol = nodo_rectanguloIntegrado;
+
+                    return;
+                }
+            }
+        }
+
+        public void Algoritmo2()
+        {
+            foreach (Stock stock in listaStocks)
+            {
+                if (stock.Arbol != null)
+                {
+                    // Calcular las posiciones absolutas
+                    Utilitarios.CalcularPosicionesAbsolutas(stock.Arbol, 0, 0);
+                    // Convertirlo a lista
+                    List<Rectangulo> listaPiezas_Stock = Utilitarios.ConvertirALista(stock.Arbol);
+
+                    foreach (Rectangulo pieza in listaPiezas_Stock)
+                    {
+                        // Si la pieza cae en una región con defecto
+                        if (Utilitarios.SeEncuentraEnLista(pieza, stock.ListaDefectos))
+                        {
+                            InsertarPiezaEnUnStock(pieza);
+                        }
+                    }
+                }
+            }
         }
 
         public List<Nodo> CrearListaBloques(Nodo raiz)

@@ -28,7 +28,7 @@ namespace CSP.Controller
             this.pesoFactorMinimizacion = pesoFactorMinimizacion;
             this.pesoFactorCuadratura = pesoFactorCuadratura;
             this.listaStocks = listaStocks;
-
+            
             // Crear la poblacion inicial
             Poblacion poblacion = CalcularPoblacionInicial(tamanhoPoblacion, probabilidadMutacion, listaPiezas, rnd);
             this.mejorCromosoma = poblacion.ListaCromosomas[0];
@@ -52,9 +52,13 @@ namespace CSP.Controller
             }
             this.mejorCromosoma = poblacion.ListaCromosomas[0];
             
-            //Debug_prueba(listaPiezas);
+
+            //List<String> listaDebug = new List<string>() { "2R", "3R", "6R", "H", "H", "1N", "4N", "10R", "9R", "V", "8N", "H", "5N", "7N", "H", "V", "V", "V", "H" };
+            //List<String> listaDebug = new List<string>() { "4N", "6N", "V", "2N", "V", "3N", "V", "1R", "9R", "7R", "H", "10R", "H", "5N", "V", "8N", "V", "H", "H" };
+            //List<String> listaDebug = new List<string>() { "8R", "2R", "H", "4N", "V", "10R", "5N", "H", "7N", "6N", "H", "9N", "1N", "3N", "V", "H", "V", "V", "V" };
+            //this.mejorCromosoma = CrearCromosoma(listaDebug, listaPiezas);
         }
-        
+
         public Poblacion CalcularPoblacionInicial(int tamanhoPoblacion, double probabilidadMutacion, List<Rectangulo> listaPiezas, System.Random rnd)
         {
             // Creo una lista de "tamPoblacion" cromosomas aleatorios.

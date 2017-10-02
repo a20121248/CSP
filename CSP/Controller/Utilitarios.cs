@@ -4,11 +4,76 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CSP.Model;
+using System.Drawing;
 
 namespace CSP.Controller
 {
     static class Utilitarios
     {
+        public static List<Rectangulo> ConvertirALista(Nodo raiz)
+        {
+            List<Rectangulo> listaRectangulos = new List<Rectangulo>();
+            // Create two stacks
+            Stack<Nodo> s1 = new Stack<Nodo>();
+            Stack<Nodo> s2 = new Stack<Nodo>();
+ 
+            if (raiz == null)
+                return null;
+ 
+            // push root to first stack
+            s1.Push(raiz);
+         
+            // Run while first stack is not empty
+            while (s1.Count != 0)
+            {
+                // Pop an item from s1 and push it to s2
+                Nodo temp = s1.Pop();
+                s2.Push(temp);
+         
+                // Push left and right children of 
+                // removed item to s1
+                if (temp.Izquierdo != null)
+                    s1.Push(temp.Izquierdo);
+                if (temp.Derecho != null)
+                    s1.Push(temp.Derecho);
+            }
+ 
+            // Print all elements of second stack
+            while (s2.Count != 0) 
+            {
+                Nodo temp = s2.Pop();
+                if (temp.TipoIntegracion == null) {
+                    listaRectangulos.Add(temp.Rect);
+                }
+            }
+
+            return listaRectangulos;
+        }
+
+        public static bool SeEncuentraEnLista(Rectangulo pieza, List<Rectangulo> listaDefectos)
+        {
+            foreach (Rectangulo defecto in listaDefectos)
+            {
+                float X1 = pieza.X_abs;
+                float Y1 = pieza.Y_abs;
+                float W1 = pieza.W;
+                float H1 = pieza.H;
+                Rectangle rect1 = new Rectangle((int)X1, (int)Y1, (int)W1, (int)H1);
+
+                float X2 = defecto.X;
+                float Y2 = defecto.Y;
+                float W2 = defecto.W;
+                float H2 = defecto.H;
+                Rectangle rect2 = new Rectangle((int)X2, (int)Y2, (int)W2, (int)H2);
+
+                if (rect1.IntersectsWith(rect2))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static double CalcularDesperdicio(List<Stock> listaStocks, List<Rectangulo> listaPiezas)
         {
             double area1 = 0;
@@ -17,17 +82,35 @@ namespace CSP.Controller
                 area1 += pieza.W * pieza.H;
             }
 
-            double area2 = 0;
+            double area2 = 0, area3 = 0, area4 = 0;
+            int i = 1;
             foreach (Stock stock in listaStocks)
             {
                 if (stock.Arbol != null)
                 {
+                    // Calcular las posiciones absolutas
+                    Utilitarios.CalcularPosicionesAbsolutas(stock.Arbol, 0, 0);
+                    // Convertirlo a lista
+                    List<Rectangulo> listaPiezas_Stock = Utilitarios.ConvertirALista(stock.Arbol);
+
+
                     area2 += stock.W * stock.H;
+
+                    area3 += (stock.Arbol.Rect.W + stock.Arbol.Rect.H) * i;
+
+                    foreach (Rectangulo pieza in listaPiezas_Stock)
+                    {
+                        if (Utilitarios.SeEncuentraEnLista(pieza, stock.ListaDefectos))
+                        {
+                            //area1 -= pieza.W * pieza.H;
+                            area4 += pieza.W * pieza.H;
+                        }
+                    }
+                    i += 3;
                     //desperdicio += (anchoStock * altoStock - anchoOcupadoPiezas * altoOcupadoPiezas);
                 }
             }
-
-            return 5 * (area1 / area2);
+            return 5 * (area1 / area2) + 5 * (area1 / area3) - 5 * (area4 / area1);
         }
 
         public static Nodo ConstruirArbolYCalcularPosicionesAPartirDeLista(List<String> ListaStr, List<Rectangulo> listaPiezas)
@@ -90,6 +173,30 @@ namespace CSP.Controller
                     raiz.Derecho.Rect.X = 0 + raiz.Izquierdo.Rect.W;
                     raiz.Derecho.Rect.Y = 0;
                 }
+            }
+        }
+
+        public static void CalcularPosicionesAbsolutas(Nodo raiz, float x, float y)
+        {
+            Rectangulo pieza = raiz.Rect;
+            int pieza_id = pieza.Id;
+            // Si es una hoja, entonces dibujar la pieza y detener la recursion
+            if (raiz.Izquierdo == null && raiz.Derecho == null)
+            {
+                float x_abs_pieza = raiz.Rect.X + x;
+                float y_abs_pieza = raiz.Rect.Y + y;
+
+                raiz.Rect.X_abs = x_abs_pieza;
+                raiz.Rect.Y_abs = y_abs_pieza;
+                return;
+            }
+            // Si es un arbol, llamar de forma recursiva a sus hijos
+            else
+            {
+                float x_abs_bloque = raiz.Rect.X + x;
+                float y_abs_bloque = raiz.Rect.Y + y;
+                Utilitarios.CalcularPosicionesAbsolutas(raiz.Izquierdo, x_abs_bloque, y_abs_bloque);
+                Utilitarios.CalcularPosicionesAbsolutas(raiz.Derecho, x_abs_bloque, y_abs_bloque);
             }
         }
 
